@@ -25,6 +25,7 @@ import {
   updatePhoto,
   removeNotifToken,
   updateStatus,
+  updatePremium,
   getCurrentUser,
   sendOtp,
 } from './UserSagas'
@@ -59,6 +60,7 @@ export default function* root() {
     takeLatest(UserTypes.UPDATE_PASSWORD_USER_REQUEST, updatePassword, api),
     takeLatest(UserTypes.UPDATE_PHOTO_USER_REQUEST, updatePhoto, api),
     takeLatest(UserTypes.UPDATE_STATUS_USER_REQUEST, updateStatus, api),
+    takeLatest(UserTypes.UPDATE_PREMIUM_USER_REQUEST, updatePremium, api),
     takeLatest(UserTypes.REMOVE_NOTIF_TOKEN_REQUEST, removeNotifToken, api),
     takeLatest(UserTypes.GET_CURRENT_USER_REQUEST, getCurrentUser, api),
 

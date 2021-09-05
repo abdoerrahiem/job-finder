@@ -7,7 +7,7 @@ import styles from './Styles/StatusbarStyle'
 import { apply } from '@Themes/OsmiProvider'
 
 const Statusbar = ({ backgroundColor }) => (
-  <StatusBar barStyle='dark-content' backgroundColor={backgroundColor} />
+  <StatusBar barStyle='light-content' backgroundColor={backgroundColor} />
 )
 
 // // Prop type warnings

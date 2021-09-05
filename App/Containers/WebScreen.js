@@ -22,7 +22,7 @@ const WebScreen = ({ route, navigation }) => {
   const { loading, success, error, applications } = useSelector(
     (state) => state.applications
   )
-  const { user } = useSelector((state) => state.user)
+  const { user, loading: userLoading } = useSelector((state) => state.user)
 
   useEffect(() => {
     if (success) {
@@ -40,6 +40,7 @@ const WebScreen = ({ route, navigation }) => {
   return (
     <>
       {loading && <Loader />}
+      {userLoading && <Loader />}
       <Header title={title} />
       <WebView
         source={{ html }}

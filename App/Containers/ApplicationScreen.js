@@ -10,6 +10,7 @@ import ReviewScreen from './ReviewScreen'
 import NotSuitableScreen from './NotSuitableScreen'
 import InterviewScreen from './InterviewScreen'
 import Loader from '@Components/Loader'
+import FocusAwareStatusBar from '@Components/FocusAwareBar'
 
 const ApplicationScreen = ({ navigation }) => {
   const dispatch = useDispatch()
@@ -48,6 +49,10 @@ const ApplicationScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={apply('flex bg-white')}>
       {/* <Statusbar backgroundColor={apply('primary-color')} /> */}
+      <FocusAwareStatusBar
+        barStyle='light-content'
+        backgroundColor={apply('primary-color')}
+      />
       {loading && <Loader />}
       <View style={apply('bg-primary-color p-5')}>
         <Text style={apply('font-bold text-white text-heading-4')}>

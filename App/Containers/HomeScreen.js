@@ -5,11 +5,11 @@ import {
   Text,
   SafeAreaView,
   Image,
-  TextInput,
   FlatList,
   ScrollView,
   RefreshControl,
   TouchableOpacity,
+  BackHandler,
 } from 'react-native'
 import { apply } from '@Themes/OsmiProvider'
 import Images from '@Images/index'
@@ -23,6 +23,12 @@ import JobActions from '@Redux/JobRedux'
 import UserActions from '@Redux/UserRedux'
 import SearchModal from '@Components/SearchModal'
 import Icon from 'react-native-vector-icons/Ionicons'
+import {
+  TestIds,
+  RewardedAd,
+  RewardedAdEventType,
+} from '@react-native-firebase/admob'
+import Statusbar from '@Components/Statusbar'
 
 const HomeScreen = ({ navigation }) => {
   const [jobsForYou, setJobsForYou] = useState([])
@@ -33,6 +39,33 @@ const HomeScreen = ({ navigation }) => {
   const dispatch = useDispatch()
   const { loading, jobs } = useSelector((state) => state.jobs)
   const { user, loading: userLoading } = useSelector((state) => state.user)
+
+  const _showAds = () => {
+    if (!user?.isPremium) {
+      const rewardAd = RewardedAd.createForAdRequest(TestIds.REWARDED)
+
+      rewardAd.onAdEvent((type, error) => {
+        if (type === RewardedAdEventType.LOADED) {
+          rewardAd.show()
+        }
+
+        if (type === RewardedAdEventType.EARNED_REWARD) {
+          // BackHandler.exitApp()
+        }
+      })
+
+      rewardAd.load()
+    }
+  }
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      _showAds
+    )
+
+    return () => backHandler.remove()
+  }, [])
 
   useEffect(() => {
     const data = {
@@ -57,6 +90,7 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={apply('flex bg-white')}>
+      {/* <Statusbar backgroundColor={apply('white')} /> */}
       {loading && <Loader />}
       {userLoading && <Loader />}
       <ScrollView

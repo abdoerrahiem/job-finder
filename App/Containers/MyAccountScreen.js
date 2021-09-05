@@ -8,6 +8,7 @@ import {
   TextInput,
   TouchableOpacity,
   Switch,
+  ToastAndroid,
 } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { apply } from '@Themes/OsmiProvider'
@@ -26,6 +27,9 @@ import BookmarkActions from '@Redux/BookmarkRedux'
 import JobActions from '@Redux/JobRedux'
 import NotificationActions from '@Redux/NotificationRedux'
 import PushNotification from 'react-native-push-notification'
+import { URL } from '@Services/FixtureApi'
+import axios from 'axios'
+import FocusAwareStatusBar from '@Components/FocusAwareBar'
 
 const MyAccountScreen = ({ navigation }) => {
   const [showChangeNameModal, setShowChangeNameModal] = useState(false)
@@ -156,14 +160,83 @@ const MyAccountScreen = ({ navigation }) => {
     // dispatch(UserActions.setMounted({ mounted: !isFingerprint }))
   }
 
+  const handleGoToPremium = async () => {
+    ToastAndroid.show('Wait for a moment...', ToastAndroid.SHORT)
+
+    const initData = {
+      orderId: `item._id-${Math.random()}`,
+      amount: 100000,
+      firstName: user.name.split(' ')[0],
+      lastName: user.name.split(' ')[1],
+      email: user.email,
+      phone: '*****',
+    }
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${user.token}`,
+      },
+    }
+
+    const { data } = await axios.post(`${URL}/users/payment`, initData, config)
+
+    const clientKey = 'SB-Mid-client-UFhmB8bM-5UomS4o'
+
+    if (data) {
+      navigation.navigate('WebScreen', {
+        handleFunc: () => {
+          const data = { token: user.token }
+          dispatch(UserActions.updatePremiumUserRequest(data))
+          navigation.navigate('MyAccountScreen')
+        },
+        title: 'Payment',
+        html: `
+        <html>
+        <head>
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <script
+            src="https://app.sandbox.midtrans.com/snap/snap.js"
+            data-client-key="${clientKey}"></script>
+        </head>
+       
+        <body>
+          <script>
+              window.snap.pay('${data}');
+          </script>
+        </body>
+      </html>
+        `,
+      })
+    }
+  }
+
   return (
     <SafeAreaView style={apply('flex bg-white')}>
+      <FocusAwareStatusBar
+        barStyle='light-content'
+        backgroundColor={apply('primary-color')}
+      />
       {loading && <Loader />}
       <View style={apply('bg-primary-color p-5')}>
         <Text style={apply('font-bold text-white text-heading-4')}>
           My Account
         </Text>
       </View>
+      {user?.isPremium ? null : (
+        <Pressable
+          android_ripple={apply('text-devider-color')}
+          style={apply('bg-secondary-color py-2 px-5 row items-center')}
+          onPress={handleGoToPremium}
+        >
+          <Text
+            style={apply('font-bold text-caption text-white uppercase flex')}
+          >
+            Go to Premium
+          </Text>
+          <Icon name='arrow-right' size={25} color={apply('white')} />
+        </Pressable>
+      )}
 
       <Pressable
         android_ripple={apply('text-devider-color')}
@@ -560,7 +633,6 @@ const MyAccountScreen = ({ navigation }) => {
           ) : null}
         </View>
       </MyAccountModal>
-
       <Button
         title='Log Out'
         backgroundColor='bg-transparent'

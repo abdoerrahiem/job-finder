@@ -17,6 +17,7 @@ import { formatMoney } from '@Lib/TextUtils'
 import RoundedButton from '@Components/RoundedButton'
 import BookmarkActions from '@Redux/BookmarkRedux'
 import Empty from '@Components/Empty'
+import FocusAwareStatusBar from '@Components/FocusAwareBar'
 
 const BookmarksScreen = ({ navigation }) => {
   const dispatch = useDispatch()
@@ -25,6 +26,10 @@ const BookmarksScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={apply('flex bg-white')}>
       {/* <Statusbar backgroundColor={apply('primary-color')} /> */}
+      <FocusAwareStatusBar
+        barStyle='light-content'
+        backgroundColor={apply('primary-color')}
+      />
       <View style={apply('bg-primary-color p-5')}>
         <Text style={apply('font-bold text-white text-heading-4')}>
           Bookmarks

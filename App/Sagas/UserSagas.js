@@ -154,6 +154,19 @@ export function* updateStatus(api, action) {
   }
 }
 
+export function* updatePremium(api, action) {
+  const { type, ...params } = action
+
+  const res = yield call(api.updatePremium, { ...params })
+  const data = path(['data'], res)
+
+  if (res.ok) {
+    yield put(UserActions.updatePremiumUserSuccess(data))
+  } else {
+    yield put(UserActions.updatePremiumUserFailure(data.error))
+  }
+}
+
 export function* removeNotifToken(api, action) {
   const { type, ...params } = action
 

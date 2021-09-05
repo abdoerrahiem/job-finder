@@ -49,6 +49,10 @@ const create = (baseURL = URL) => {
     api.setHeader('Authorization', `Bearer ${data.token}`)
     return api.put('/users/update/status', data)
   }
+  const updatePremium = (data) => {
+    api.setHeader('Authorization', `Bearer ${data.token}`)
+    return api.put('/users/update/premium', data)
+  }
 
   // Jobs
   const getJobs = () => api.get('/jobs')
@@ -94,6 +98,7 @@ const create = (baseURL = URL) => {
     updateNotification,
     removeNotifToken,
     updateStatus,
+    updatePremium,
     getCurrentUser,
   }
 }

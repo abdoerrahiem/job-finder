@@ -74,6 +74,12 @@ const { Types, Creators } = createActions({
   updateStatusUserSuccess: ['data'],
   updateStatusUserFailure: ['errData'],
 
+  updatePremiumUserRequest: {
+    token: null,
+  },
+  updatePremiumUserSuccess: ['data'],
+  updatePremiumUserFailure: ['errData'],
+
   getCurrentUserRequest: {
     token: null,
   },
@@ -342,6 +348,26 @@ export const updateStatusUserFailure = (state, action) => {
   })
 }
 
+export const updatePremiumUserRequest = (state) =>
+  state.merge({ loading: true })
+export const updatePremiumUserSuccess = (state, action) => {
+  const { data } = action
+
+  return state.merge({
+    user: data.user,
+    loading: false,
+    error: null,
+  })
+}
+export const updatePremiumUserFailure = (state, action) => {
+  const { errData } = action
+
+  return state.merge({
+    loading: false,
+    error: errData,
+  })
+}
+
 export const removeNotifTokenRequest = (state) => state.merge({ loading: true })
 export const removeNotifTokenSuccess = (state, action) => {
   const { data } = action
@@ -423,6 +449,10 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.UPDATE_STATUS_USER_REQUEST]: updateStatusUserRequest,
   [Types.UPDATE_STATUS_USER_SUCCESS]: updateStatusUserSuccess,
   [Types.UPDATE_STATUS_USER_FAILURE]: updateStatusUserFailure,
+
+  [Types.UPDATE_PREMIUM_USER_REQUEST]: updatePremiumUserRequest,
+  [Types.UPDATE_PREMIUM_USER_SUCCESS]: updatePremiumUserSuccess,
+  [Types.UPDATE_PREMIUM_USER_FAILURE]: updatePremiumUserFailure,
 
   [Types.VERIFY_USER_REQUEST]: verifyUserRequest,
   [Types.VERIFY_USER_SUCCESS]: verifyUserSuccess,
